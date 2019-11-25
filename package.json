@@ -1,0 +1,16 @@
+{
+  "name": "anti-inundator",
+  "version": "1.0.0",
+  "description": "prevents me from forgetting to clean roof ahead of rain",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SantiValdez",
+  "license": "ISC",
+  "dependencies": {
+    "gmail-send": "^1.8.10",
+    "nodemon": "^2.0.1",
+    "openweathermap-node": "^1.1.2"
+  }
+}
