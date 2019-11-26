@@ -29,8 +29,8 @@ const port = 3000;
 
 
 const apiKey = '022c84f5c2857c814c2f6b367b7f8f19';
-// const cityID = '3838583'; 
-const cityID = '2643743';
+// const cityID = '3838583';
+const cityID = '2643743'; 
 const OpenWeatherMapHelper = require("openweathermap-node");
 const helper = new OpenWeatherMapHelper(
     {
@@ -43,15 +43,16 @@ const send = require('gmail-send')({
   user: 'santimaiden290@gmail.com',
   pass: 'E9zZtZ8ryv7ptN',
   to:   [
-    'santi.valdezg@gmail.com',
-    'dvaldez39@gmail.com'
+    'santi.valdezg@gmail.com'
   ],
   subject: 'LIMPIA LA REJILLA',
 });
 
+const emailFooter = '<br><em>Limpia esa rejilla..<em>';
 
 let dataToSend = [];
-let emailText = '';
+let emailHeader = '';
+let emailText = [];
 
 helper.getThreeHourForecastByCityID(cityID, (err, threeHourForecast) => {
     if(err){
@@ -60,7 +61,8 @@ helper.getThreeHourForecastByCityID(cityID, (err, threeHourForecast) => {
     else {
     	for (var i = 0; i < threeHourForecast.list.length; i++) {
         for (var j = 0; j < threeHourForecast.list[i].weather.length; j++) {
-          if(threeHourForecast.list[i].weather[j].main === 'Rain'){
+          if(threeHourForecast.list[i].weather[j].main === 'Rain'||
+            threeHourForecast.list[i].weather[j].main === 'Thunderstorm'){
             let diaHora = threeHourForecast.list[i].dt_txt.split(' ');
             let obj = {
               title: threeHourForecast.list[i].weather[j].main,
@@ -70,22 +72,36 @@ helper.getThreeHourForecastByCityID(cityID, (err, threeHourForecast) => {
             } 
             dataToSend.push(obj);
           } // if
-        } // 2 for
-    	} // 1 for
+        } // inner for - weather object
+    	} // outer for - days
       if(dataToSend){
-        emailText += '<h3>Se viene la lluvia:</h3> <br>';
+        emailHeader += `<h3>Se viene la lluvia:</h3> <br>
+                      <ul>`;
+        emailText.push(emailHeader);
+
+        let previous = '';
+
         for (var i = 0; i < dataToSend.length; i++) {
-          emailText += `<ul>
-                          <li>
-                            El día: <strong>${dataToSend[i].day}</strong> <br>
-                            Pronóstico: <strong>${dataToSend[i].desc}</strong> <br>
-                            Hora: <strong>${dataToSend[i].hour}</strong> <br>
-                          </li>
-                        </ul><br>`;
+          let br = '<br>';
+          let hour = dataToSend[i].hour.substring(0, dataToSend[i].hour.length-3);
+          let dia = `<li>Día: <strong>${dataToSend[i].day}</strong> <br>`;
+          let pronostico = `${hour} - <strong>${dataToSend[i].desc}</strong> <br>`;
+
+          if(dia == previous){
+            emailText.push(pronostico);
+          } else {
+            previous = dia;
+            emailText.push(br);
+            emailText.push(dia);
+            emailText.push(pronostico);
+          }
         }
-        emailText += '<br><em>Limpia esa rejilla..<em>';
+
+        emailText.push(emailFooter);
+        let emailTextString = emailText.join('');
+
         send({
-          html: emailText,  
+          html: emailTextString,  
         }, (error, result, fullResult) => {
           if (error) console.error(error);
             console.log(result);
@@ -94,28 +110,7 @@ helper.getThreeHourForecastByCityID(cityID, (err, threeHourForecast) => {
     } // end else
 });
 
-
-/*
-
-
-
-
-            send({
-              text: emailText,  
-            }, (error, result, fullResult) => {
-              if (error) console.error(error);
-                console.log(result);
-            });
-
-*/
-
-
-
-
 const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
 });
 
 server.listen(port, hostname, () => {
