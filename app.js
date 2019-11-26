@@ -29,8 +29,8 @@ const port = 3000;
 
 
 const apiKey = '022c84f5c2857c814c2f6b367b7f8f19';
-// const cityID = '3838583';
-const cityID = '2643743'; 
+// const cityID = '2643743'; //london for testing (rain capital)
+const cityID = '3838583'; //rosario
 const OpenWeatherMapHelper = require("openweathermap-node");
 const helper = new OpenWeatherMapHelper(
     {
