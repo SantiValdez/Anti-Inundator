@@ -13,5 +13,8 @@
     "gmail-send": "^1.8.10",
     "nodemon": "^2.0.1",
     "openweathermap-node": "^1.1.2"
+  },
+  "engines": {
+    "node": "10.x"
   }
 }
