@@ -22,15 +22,17 @@ EXAMPLE RESPONSE
   dt_txt: '2019-11-26 00:00:00' }
 */
 
+
+const dotenv = require('dotenv').config({ path: './process.env' });
+
 const http = require('http');
 
-const hostname = '127.0.0.1';
-const port = 3000;
+const hostname = process.env.HOSTNAME;
+const port = process.env.PORT;           
 
 
-const apiKey = '022c84f5c2857c814c2f6b367b7f8f19';
-// const cityID = '2643743'; //london for testing (rain capital)
-const cityID = '3838583'; //rosario
+const apiKey = process.env.API_KEY;
+const cityID = '3838583';
 const OpenWeatherMapHelper = require("openweathermap-node");
 const helper = new OpenWeatherMapHelper(
     {
@@ -40,10 +42,10 @@ const helper = new OpenWeatherMapHelper(
 );
 
 const send = require('gmail-send')({
-  user: 'santimaiden290@gmail.com',
-  pass: '',
+  user: process.env.USER,
+  pass: process.env.PASS,                       
   to:   [
-    'santi.valdezg@gmail.com'
+    process.env.TO     
   ],
   subject: 'LIMPIA LA REJILLA',
 });
@@ -107,7 +109,7 @@ helper.getThreeHourForecastByCityID(cityID, (err, threeHourForecast) => {
             console.log(result);
         });
       }
-    } // end else
+    }
 });
 
 const server = http.createServer((req, res) => {

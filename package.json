@@ -9,6 +9,7 @@
   "author": "SantiValdez",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "gmail-send": "^1.8.10",
     "nodemon": "^2.0.1",
     "openweathermap-node": "^1.1.2"
