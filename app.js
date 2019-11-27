@@ -41,7 +41,7 @@ const helper = new OpenWeatherMapHelper(
 
 const send = require('gmail-send')({
   user: 'santimaiden290@gmail.com',
-  pass: 'E9zZtZ8ryv7ptN',
+  pass: '',
   to:   [
     'santi.valdezg@gmail.com'
   ],
